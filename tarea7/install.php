@@ -1,5 +1,5 @@
 <?php
-$mensaje=array();
+$mensaje= array();
 $txt="";
 if($_POST){
 
@@ -7,26 +7,29 @@ if($_POST){
    $datos=explode(';',$txt);
 
    $ok=true;
-   if(count($datos)!=4){
-
+   
+   if(count($datos)!=4)
+   {
+      
      $mensaje[]="datos incompletos";
      $ok=false;
    }
-   if($ok){
+      if($ok){
+        
      $link=mysqli_connect($datos[0],$datos[1],$datos[2]);
 
-     if($link=false){
+     if($link==false){
        $mensaje[]="tenemos un problema con la conexion";
      }
      else{
      $sql="CREATE DATABASE {$datos[3]}";
+     mysqli_query($link, $sql);
      //utiliza la base de datos
      mysqli_query($link,"USE {$datos[3]}");
      //ejecuta el sql
-     mysqli_query($link,$sql);
      $sql="DROP TABLE IF EXISTS `hotel`;";
-     //crea la tabla
      mysqli_query($link,$sql);
+     //crea la tabla
      $sql="CREATE TABLE `hotel` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `nombre` varchar(100) NOT NULL,
@@ -40,8 +43,9 @@ if($_POST){
       `usuario` varchar(100) NOT NULL,
       PRIMARY KEY (`id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;";
+      mysqli_query($link,$sql);
     //crea los datos
-    mysqli_query($link,$sql);
+  
 
     $info="<?php
     define('BD_HOST','{$datos[0]}');
@@ -60,8 +64,6 @@ if($_POST){
      }
    }
 $mensaje=implode("<br/>",$mensaje);
-
-
 }
 ?>
 <!DOCTYPE html>
@@ -80,14 +82,14 @@ $mensaje=implode("<br/>",$mensaje);
 </head>
 <body>
 <h3>El futuro es hoy</h3>
-<center><p> Digite: servidor;usuario;clave;basedatos seguir el orden. </p></center>
+<center><p> Digite: servidor;usuario;clave ;basedatos seguir el orden. </p></center>
 <form  method="post">
 <div class="asg_error">
 <?php  echo $mensaje;  ?>
 </div>
 <div class="container">
     <div class="">
-    <input value="<?php  echo $txt; ?>" type="text" name="datos" class="form-control" />
+    <input value="<?php  echo $txt; ?>" type="text" name="datos" id="datos" class="form-control" />
     </div>
 </div>
 <button type="submit" class="btn btn-primary">Instalar</button>
